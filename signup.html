@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sign Up | RFN Workspaces</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <main class="auth-shell">
+    <section class="auth-card">
+      <p class="eyebrow gold-text">RFN Operations Portal</p>
+      <h1>Create Account</h1>
+      <p class="muted">Create your RFN Workspaces account to access approved customer workspaces, RFN employee systems, and internship operations.</p>
+
+      <form class="form-stack" id="signupForm">
+        <div class="form-field">
+          <label>Full Name</label>
+          <input type="text" id="fullName" placeholder="Enter your name" required />
+        </div>
+
+        <div class="form-field">
+          <label>Email Address</label>
+          <input type="email" id="email" placeholder="you@example.com" required />
+        </div>
+
+        <div class="form-field">
+          <label>Password</label>
+          <input type="password" id="password" placeholder="Create password" required />
+        </div>
+
+        <button class="btn btn-gold" type="submit">Create Account</button>
+      </form>
+
+      <p class="message" id="message"></p>
+
+      <div class="hero-actions">
+        <a class="btn btn-outline" href="login.html">Already Have an Account?</a>
+        <a class="btn btn-outline" href="index.html">Return Home</a>
+      </div>
+    </section>
+  </main>
+
+  <script type="module" src="js/auth.js"></script>
+</body>
+</html>
