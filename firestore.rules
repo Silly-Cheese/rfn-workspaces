@@ -6,38 +6,92 @@ service cloud.firestore {
       return request.auth != null;
     }
 
+    function userDoc() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid));
+    }
+
+    function activeUser() {
+      return signedIn() && userDoc().data.status == 'active';
+    }
+
+    function roleIn(roles) {
+      return activeUser() && userDoc().data.role in roles;
+    }
+
+    function adminRole() {
+      return roleIn(['Chief Executive Officer', 'Chief Operating Officer', 'Executive Director', 'Executive Assistant']);
+    }
+
+    function managementRole() {
+      return roleIn(['Chief Executive Officer', 'Chief Operating Officer', 'Executive Director', 'Executive Assistant', 'Senior Director', 'Director', 'Associate Director', 'Deputy Director', 'Senior Operations Manager', 'Operations Manager', 'Assistant Manager', 'Management Trainee']);
+    }
+
     match /users/{userId} {
-      allow read, write: if signedIn() && request.auth.uid == userId;
+      allow create: if signedIn() && request.auth.uid == userId;
+      allow read: if activeUser() && (request.auth.uid == userId || managementRole());
+      allow update: if activeUser() && (request.auth.uid == userId || adminRole());
+      allow delete: if false;
     }
 
     match /systemSettings/{document=**} {
-      allow read: if signedIn();
-      allow write: if false;
+      allow read: if activeUser();
+      allow write: if adminRole();
+    }
+
+    match /roles/{document=**} {
+      allow read: if activeUser();
+      allow write: if adminRole();
+    }
+
+    match /permissions/{document=**} {
+      allow read: if activeUser();
+      allow write: if adminRole();
+    }
+
+    match /departments/{document=**} {
+      allow read: if activeUser();
+      allow write: if managementRole();
     }
 
     match /activityLogs/{document=**} {
-      allow read: if signedIn();
-      allow write: if signedIn();
+      allow create: if signedIn();
+      allow read: if managementRole();
+      allow update, delete: if false;
     }
 
     match /approvedCustomers/{document=**} {
-      allow read: if signedIn();
-      allow write: if signedIn();
+      allow read: if activeUser();
+      allow write: if managementRole();
     }
 
     match /workspaces/{document=**} {
-      allow read: if signedIn();
-      allow write: if signedIn();
+      allow read: if activeUser();
+      allow create: if activeUser();
+      allow update: if managementRole();
+      allow delete: if adminRole();
+    }
+
+    match /workspaceRequests/{document=**} {
+      allow create: if activeUser();
+      allow read, update: if managementRole();
+      allow delete: if adminRole();
     }
 
     match /tickets/{document=**} {
-      allow read: if signedIn();
-      allow write: if signedIn();
+      allow read, create: if activeUser();
+      allow update: if managementRole();
+      allow delete: if adminRole();
     }
 
     match /internships/{document=**} {
-      allow read: if signedIn();
-      allow write: if signedIn();
+      allow read: if activeUser();
+      allow create, update, delete: if managementRole();
+    }
+
+    match /internshipResponses/{document=**} {
+      allow read, create: if activeUser();
+      allow update: if managementRole();
+      allow delete: if adminRole();
     }
   }
 }
