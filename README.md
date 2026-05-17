@@ -2,44 +2,123 @@
 
 RFN Workspaces is a professional operations platform for the Robloxian Franchise Network.
 
-## Features
+## System Overview
 
-- Firebase Authentication
-- Firestore database integration
-- Responsive desktop/mobile UI
-- Customer workspace system
-- RFN employee dashboard
-- Internship management foundation
-- Automatic Firestore bootstrap setup
-- Activity logging foundation
-- GitHub Pages compatible
+RFN Workspaces is designed to provide:
 
-## Firebase Setup
+- Customer workspace management
+- RFN employee operations
+- Internship and training rooms
+- Ticket handling
+- Workspace oversight
+- Administrative controls
+- Activity logging
+- Role-based access
+- Firebase-powered realtime systems
 
-1. Enable Firebase Authentication
-2. Enable Firestore Database
-3. Add your GitHub Pages domain to authorized domains
-4. Deploy using GitHub Pages
+## Current Architecture
 
-## Current Foundation
-
+### Public Pages
 - Landing page
 - Login page
 - Signup page
-- Dashboard page
-- Responsive CSS system
-- Firebase initialization
-- Firestore bootstrap setup
-- Basic authentication flow
 
-## Planned Modules
+### Customer Operations
+- Customer dashboard
+- Workspace creation and verification
+- Workspace management
+- Workspace settings
+- Member management
+- Ticket center
 
-- Workspace creation
-- Discord ID verification
-- Ticket system
-- Internship rooms
-- Employee operations
+### RFN Employee Operations
+- Employee hub
+- Workspace oversight
+- Workspace review
+- Tasks
+- Staff directory
+
+### Oversight Systems
 - Audit center
-- Reports system
+- Report center
 - Activity logs
-- Administrative controls
+
+### Internship Systems
+- Internship center
+- Internship room
+- Assignment submission structure
+
+### Administrative Systems
+- User management
+- Customer approvals
+- Role management
+- System settings
+- Security center
+
+## Firebase Setup
+
+### 1. Enable Authentication
+Enable Email/Password Authentication inside Firebase Authentication.
+
+### 2. Enable Firestore Database
+Create a Firestore database in production mode.
+
+### 3. Add Authorized Domains
+Add your GitHub Pages domain under Authentication > Settings > Authorized Domains.
+
+### 4. Deploy Firestore Rules
+Paste the firestore.rules file into Firebase Firestore Rules.
+
+### 5. Deploy to GitHub Pages
+Enable GitHub Pages from the repository settings.
+
+## Firestore Bootstrap System
+
+The project automatically initializes missing foundational documents including:
+
+- systemSettings
+- permissions
+- roles
+- departments
+- approvedCustomers
+- workspaces
+- tickets
+- internships
+- activityLogs
+
+## Security Structure
+
+The platform includes:
+
+- Role-based access control
+- Administrative permission checks
+- Workspace access restrictions
+- Activity log protections
+- Management-level update permissions
+- Executive-level administrative control
+
+## Planned Future Expansions
+
+- Realtime notifications
+- Direct messaging
+- File uploads
+- Workspace analytics
+- Audit evidence uploads
+- Advanced ticket routing
+- Employee evaluations
+- Leave management
+- Shift scheduling
+- Internal Affairs systems
+- RFN performance metrics
+- Roblox integration
+- Discord API integration
+
+## Recommended Next Steps
+
+1. Configure Firebase Authentication
+2. Deploy Firestore Rules
+3. Enable GitHub Pages
+4. Create the first admin account
+5. Add approved customer records
+6. Test workspace verification
+7. Begin Batch 8 development
