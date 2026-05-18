@@ -6,36 +6,46 @@
   <title>Dashboard | RFN Workspaces</title>
   <link rel="stylesheet" href="css/style.css" />
 </head>
-<body>
+<body class="premium-home">
   <header class="topbar">
     <div>
       <p class="eyebrow">RFN Workspaces</p>
-      <h1>Operations Dashboard</h1>
+      <h1>Operations Command Center</h1>
     </div>
     <button class="btn btn-outline" id="logoutBtn">Logout</button>
   </header>
 
   <div class="app-shell">
     <aside class="sidebar">
-      <a class="active" href="dashboard.html">Dashboard</a>
-      <a href="customer/create-workspace.html">Create Workspace</a>
-      <a href="customer/my-workspace.html">My Workspace</a>
+      <a class="active" href="dashboard.html">Command Center</a>
+      <a href="role-select.html">Workspace Selector</a>
+      <a href="customer/dashboard.html">Customer Hub</a>
+      <a href="rfn/employee-hub.html">Employee Hub</a>
+      <a href="admin/users.html">Admin Control</a>
       <a href="customer/tickets.html">Tickets</a>
       <a href="rfn/internships.html">Internships</a>
-      <a href="rfn/employee-hub.html">Employee Hub</a>
-      <a href="rfn/activity-logs.html">Activity Logs</a>
-      <a href="admin/system-settings.html">Settings</a>
+      <a href="rfn/audits.html">Audits</a>
     </aside>
 
     <main class="main-content">
-      <div class="dashboard-grid">
-        <a class="dashboard-card" href="customer/create-workspace.html"><span class="status-pill">Customer</span><h3>Create Workspace</h3><p class="muted">Verify Discord approval and create a customer workspace.</p></a>
-        <a class="dashboard-card" href="customer/tickets.html"><span class="status-pill">Support</span><h3>Tickets</h3><p class="muted">Submit and track RFN support requests.</p></a>
-        <a class="dashboard-card" href="rfn/employee-hub.html"><span class="status-pill">RFN</span><h3>Employee Hub</h3><p class="muted">Open RFN employee operations and workspace oversight.</p></a>
-        <a class="dashboard-card" href="rfn/internships.html"><span class="status-pill">Training</span><h3>Internships</h3><p class="muted">Open internship rooms, tasks, and development systems.</p></a>
-        <a class="dashboard-card" href="rfn/audits.html"><span class="status-pill">Oversight</span><h3>Audits</h3><p class="muted">Open RFN audit and compliance review systems.</p></a>
-        <a class="dashboard-card" href="admin/users.html"><span class="status-pill">Admin</span><h3>Admin Panel</h3><p class="muted">Manage users, approvals, roles, and security settings.</p></a>
-      </div>
+      <section class="hero-card">
+        <p class="eyebrow gold-text">Verified Portal Routing</p>
+        <h2 style="font-size:clamp(2.2rem,4vw,4.2rem);">Welcome to the RFN command center.</h2>
+        <p class="hero-copy">Choose the area you need. Customer users are routed to workspace tools, RFN staff are routed to employee operations, and executive administrators can manage users and platform control.</p>
+        <div class="hero-actions">
+          <a class="btn btn-gold" href="role-select.html">Choose Workspace</a>
+          <a class="btn btn-outline" href="admin/users.html">Open Admin</a>
+        </div>
+      </section>
+
+      <section class="dashboard-grid" style="margin-top:18px;">
+        <a class="dashboard-card portal-card" href="customer/dashboard.html"><span class="status-pill">Customer</span><h3>Customer Workspace Hub</h3><p class="muted">Manage customer workspace creation, tickets, members, and workspace settings.</p></a>
+        <a class="dashboard-card portal-card" href="rfn/employee-hub.html"><span class="status-pill">RFN Staff</span><h3>Employee Operations</h3><p class="muted">Open RFN staff tools, assignments, workspace oversight, and internal tasks.</p></a>
+        <a class="dashboard-card portal-card" href="admin/users.html"><span class="status-pill">Admin</span><h3>Executive Administration</h3><p class="muted">Manage users, pending access, roles, approvals, and security controls.</p></a>
+        <a class="dashboard-card portal-card" href="customer/tickets.html"><span class="status-pill">Support</span><h3>Ticket Center</h3><p class="muted">Submit and review support, compliance, workspace, and appeal tickets.</p></a>
+        <a class="dashboard-card portal-card" href="rfn/internships.html"><span class="status-pill">Training</span><h3>Internship Rooms</h3><p class="muted">Create and manage internship tasks, questions, reviews, and responses.</p></a>
+        <a class="dashboard-card portal-card" href="rfn/audits.html"><span class="status-pill">Oversight</span><h3>Audits and Reports</h3><p class="muted">Open audit, report, and accountability systems for RFN oversight.</p></a>
+      </section>
     </main>
   </div>
 
