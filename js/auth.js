@@ -14,16 +14,42 @@ import {
 
 const AUTH_DOMAIN = 'rfn-workspaces.local';
 const OWNER_USERNAMES = ['executive_eagle', 'christophershelley', 'christophershelley257'];
+const STAFF_ROLES = [
+  'Chief Executive Officer', 'Chief Operating Officer', 'Executive Director', 'Executive Assistant',
+  'Senior Director', 'Director', 'Associate Director', 'Deputy Director',
+  'Senior Operations Manager', 'Operations Manager', 'Assistant Manager', 'Management Trainee',
+  'Lead Associate', 'Senior Associate', 'Associate', 'Junior Associate', 'Trainee'
+];
+const CUSTOMER_ROLES = ['Customer Owner', 'Customer Admin', 'Customer Staff', 'Customer Viewer'];
 
 function normalizeUsername(username) {
-  return username
-    .trim()
-    .toLowerCase()
-    .replace(/[^a-z0-9._-]/g, '');
+  return username.trim().toLowerCase().replace(/[^a-z0-9._-]/g, '');
 }
 
 function usernameToEmail(username) {
   return `${normalizeUsername(username)}@${AUTH_DOMAIN}`;
+}
+
+function rootPrefix() {
+  const path = window.location.pathname;
+  return path.includes('/customer/') || path.includes('/rfn/') || path.includes('/admin/') ? '../' : '';
+}
+
+function hasStaffAccess(profile) {
+  return STAFF_ROLES.includes(profile.role) || profile.staffAccess === true || profile.isStaff === true;
+}
+
+function hasCustomerAccess(profile) {
+  return CUSTOMER_ROLES.includes(profile.role) || profile.customerAccess === true || profile.isCustomer === true;
+}
+
+function dashboardForProfile(profile) {
+  const staff = hasStaffAccess(profile);
+  const customer = hasCustomerAccess(profile);
+
+  if (staff && customer) return `${rootPrefix()}role-select.html`;
+  if (staff) return `${rootPrefix()}rfn/employee-hub.html`;
+  return `${rootPrefix()}customer/dashboard.html`;
 }
 
 async function safeBootstrap() {
@@ -38,9 +64,7 @@ async function ensureUserProfile(user, displayName = '', username = '') {
   const userRef = doc(db, 'users', user.uid);
   const userSnap = await getDoc(userRef);
 
-  if (userSnap.exists()) {
-    return userSnap.data();
-  }
+  if (userSnap.exists()) return userSnap.data();
 
   const cleanUsername = normalizeUsername(username || user.email.split('@')[0]);
   const owner = OWNER_USERNAMES.includes(cleanUsername);
@@ -55,6 +79,8 @@ async function ensureUserProfile(user, displayName = '', username = '') {
     rank: owner ? 'Chief Executive Officer' : 'Customer Owner',
     department: owner ? 'Executive Leadership' : 'Customer Workspace',
     status: 'active',
+    staffAccess: owner,
+    customerAccess: true,
     createdAt: serverTimestamp(),
     updatedAt: serverTimestamp()
   };
@@ -69,10 +95,15 @@ async function ensureUserProfile(user, displayName = '', username = '') {
   return profile;
 }
 
+async function finishLogin(credential, username, displayName = '') {
+  const profile = await ensureUserProfile(credential.user, displayName, username);
+  await safeBootstrap();
+  return profile;
+}
+
 await safeBootstrap();
 
 const signupForm = document.getElementById('signupForm');
-
 if (signupForm) {
   signupForm.addEventListener('submit', async (event) => {
     event.preventDefault();
@@ -91,15 +122,10 @@ if (signupForm) {
 
     try {
       const credential = await createUserWithEmailAndPassword(auth, usernameToEmail(username), password);
-      await ensureUserProfile(credential.user, displayName, username);
-      await safeBootstrap();
-
+      const profile = await finishLogin(credential, username, displayName);
       message.textContent = 'Account created successfully.';
       showToast('Account Created', 'Your RFN Workspaces account was created successfully.');
-
-      setTimeout(() => {
-        window.location.href = 'dashboard.html';
-      }, 1100);
+      setTimeout(() => { window.location.href = dashboardForProfile(profile); }, 900);
     } catch (error) {
       message.textContent = error.message;
       showToast('Signup Failed', error.message, 'error');
@@ -108,7 +134,6 @@ if (signupForm) {
 }
 
 const loginForm = document.getElementById('loginForm');
-
 if (loginForm) {
   loginForm.addEventListener('submit', async (event) => {
     event.preventDefault();
@@ -120,15 +145,10 @@ if (loginForm) {
 
     try {
       const credential = await signInWithEmailAndPassword(auth, usernameToEmail(username), password);
-      await ensureUserProfile(credential.user, '', username);
-      await safeBootstrap();
-
+      const profile = await finishLogin(credential, username);
       message.textContent = 'Login successful.';
-      showToast('Login Successful', 'Welcome back to RFN Workspaces.');
-
-      setTimeout(() => {
-        window.location.href = 'dashboard.html';
-      }, 900);
+      showToast('Access Verified', 'Routing you to the correct RFN workspace.');
+      setTimeout(() => { window.location.href = dashboardForProfile(profile); }, 800);
     } catch (error) {
       message.textContent = error.message;
       showToast('Login Failed', error.message, 'error');
@@ -137,13 +157,10 @@ if (loginForm) {
 }
 
 const logoutBtn = document.getElementById('logoutBtn');
-
 if (logoutBtn) {
   logoutBtn.addEventListener('click', async () => {
     await signOut(auth);
     showToast('Logged Out', 'You have been signed out.');
-    setTimeout(() => {
-      window.location.href = 'login.html';
-    }, 700);
+    setTimeout(() => { window.location.href = `${rootPrefix()}login.html`; }, 700);
   });
 }
