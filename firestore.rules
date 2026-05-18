@@ -7,16 +7,12 @@ service cloud.firestore {
       return request.auth != null;
     }
 
-    function userPath() {
-      return /databases/$(database)/documents/users/$(request.auth.uid);
-    }
-
     function hasUserDoc() {
-      return signedIn() && exists(userPath());
+      return signedIn() && exists(/databases/$(database)/documents/users/$(request.auth.uid));
     }
 
     function userDoc() {
-      return get(userPath());
+      return get(/databases/$(database)/documents/users/$(request.auth.uid));
     }
 
     function activeUser() {
@@ -95,32 +91,28 @@ service cloud.firestore {
 
     match /systemSettings/{document=**} {
       allow read: if activeUser();
-      allow create: if signedIn();
-      allow update, delete: if adminRole();
+      allow create, update, delete: if adminRole();
     }
 
     match /roles/{document=**} {
       allow read: if activeUser();
-      allow create: if signedIn();
-      allow update, delete: if adminRole();
+      allow create, update, delete: if adminRole();
     }
 
     match /permissions/{document=**} {
       allow read: if activeUser();
-      allow create: if signedIn();
-      allow update, delete: if adminRole();
+      allow create, update, delete: if adminRole();
     }
 
     match /departments/{document=**} {
       allow read: if activeUser();
-      allow create: if signedIn();
-      allow update, delete: if managementRole();
+      allow create, update, delete: if managementRole();
     }
 
     match /activityLogs/{document=**} {
-      allow create: if signedIn();
+      allow create: if activeUser();
       allow read: if managementRole();
-      allow update, delete: if false;
+      allow update, delete: if adminRole();
     }
 
     match /approvedCustomers/{document=**} {
@@ -129,45 +121,44 @@ service cloud.firestore {
     }
 
     match /workspaces/{document=**} {
-      allow read: if activeUser();
-      allow create: if activeUser();
-      allow update: if managementRole();
+      allow read, create: if activeUser();
+      allow update: if activeUser();
       allow delete: if adminRole();
     }
 
     match /workspaceRequests/{document=**} {
-      allow create: if activeUser();
-      allow read, update: if managementRole();
+      allow read, create: if activeUser();
+      allow update: if activeUser();
       allow delete: if adminRole();
     }
 
     match /workspaceMembers/{document=**} {
-      allow read: if activeUser();
-      allow create, update: if managementRole();
+      allow read, create: if activeUser();
+      allow update: if activeUser();
       allow delete: if adminRole();
     }
 
     match /workspaceSettings/{document=**} {
-      allow read: if activeUser();
-      allow create, update: if managementRole();
+      allow read, create: if activeUser();
+      allow update: if activeUser();
       allow delete: if adminRole();
     }
 
     match /workspaceLogs/{document=**} {
       allow create: if activeUser();
-      allow read: if managementRole();
-      allow update, delete: if false;
+      allow read: if activeUser();
+      allow update, delete: if adminRole();
     }
 
     match /tickets/{document=**} {
       allow read, create: if activeUser();
-      allow update: if managementRole();
+      allow update: if activeUser();
       allow delete: if adminRole();
     }
 
     match /ticketReplies/{document=**} {
       allow read, create: if activeUser();
-      allow update: if managementRole();
+      allow update: if activeUser();
       allow delete: if adminRole();
     }
 
@@ -204,7 +195,7 @@ service cloud.firestore {
 
     match /internshipResponses/{document=**} {
       allow read, create: if activeUser();
-      allow update: if managementRole();
+      allow update: if activeUser();
       allow delete: if adminRole();
     }
 
@@ -220,7 +211,8 @@ service cloud.firestore {
 
     match /reports/{document=**} {
       allow read, create: if activeUser();
-      allow update, delete: if managementRole();
+      allow update: if activeUser();
+      allow delete: if managementRole();
     }
 
     match /employeeEvaluations/{document=**} {
