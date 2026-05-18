@@ -12,7 +12,19 @@ import {
   serverTimestamp
 } from 'https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js';
 
-const OWNER_EMAILS = ['christophershelley257@gmail.com'];
+const AUTH_DOMAIN = 'rfn-workspaces.local';
+const OWNER_USERNAMES = ['executive_eagle', 'christophershelley', 'christophershelley257'];
+
+function normalizeUsername(username) {
+  return username
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9._-]/g, '');
+}
+
+function usernameToEmail(username) {
+  return `${normalizeUsername(username)}@${AUTH_DOMAIN}`;
+}
 
 async function safeBootstrap() {
   try {
@@ -22,7 +34,7 @@ async function safeBootstrap() {
   }
 }
 
-async function ensureUserProfile(user, fullName = '') {
+async function ensureUserProfile(user, displayName = '', username = '') {
   const userRef = doc(db, 'users', user.uid);
   const userSnap = await getDoc(userRef);
 
@@ -30,12 +42,15 @@ async function ensureUserProfile(user, fullName = '') {
     return userSnap.data();
   }
 
-  const owner = OWNER_EMAILS.includes((user.email || '').toLowerCase());
+  const cleanUsername = normalizeUsername(username || user.email.split('@')[0]);
+  const owner = OWNER_USERNAMES.includes(cleanUsername);
 
   const profile = {
     uid: user.uid,
-    fullName: fullName || user.email || 'RFN User',
-    email: user.email || '',
+    username: cleanUsername,
+    displayName: displayName || cleanUsername,
+    fullName: displayName || cleanUsername,
+    loginEmail: user.email || '',
     role: owner ? 'Chief Executive Officer' : 'Customer Owner',
     rank: owner ? 'Chief Executive Officer' : 'Customer Owner',
     department: owner ? 'Executive Leadership' : 'Customer Workspace',
@@ -45,6 +60,12 @@ async function ensureUserProfile(user, fullName = '') {
   };
 
   await setDoc(userRef, profile, { merge: true });
+  await setDoc(doc(db, 'usernames', cleanUsername), {
+    uid: user.uid,
+    username: cleanUsername,
+    createdAt: serverTimestamp()
+  }, { merge: true });
+
   return profile;
 }
 
@@ -56,14 +77,21 @@ if (signupForm) {
   signupForm.addEventListener('submit', async (event) => {
     event.preventDefault();
 
-    const fullName = document.getElementById('fullName')?.value.trim() || '';
-    const email = document.getElementById('email').value.trim();
+    const displayName = document.getElementById('fullName')?.value.trim() || '';
+    const usernameRaw = document.getElementById('username')?.value.trim() || '';
     const password = document.getElementById('password').value;
     const message = document.getElementById('message');
+    const username = normalizeUsername(usernameRaw);
+
+    if (!username || username.length < 3) {
+      message.textContent = 'Username must be at least 3 characters.';
+      showToast('Signup Failed', 'Username must be at least 3 characters.', 'error');
+      return;
+    }
 
     try {
-      const credential = await createUserWithEmailAndPassword(auth, email, password);
-      await ensureUserProfile(credential.user, fullName);
+      const credential = await createUserWithEmailAndPassword(auth, usernameToEmail(username), password);
+      await ensureUserProfile(credential.user, displayName, username);
       await safeBootstrap();
 
       message.textContent = 'Account created successfully.';
@@ -85,13 +113,14 @@ if (loginForm) {
   loginForm.addEventListener('submit', async (event) => {
     event.preventDefault();
 
-    const email = document.getElementById('email').value.trim();
+    const usernameRaw = document.getElementById('username')?.value.trim() || '';
     const password = document.getElementById('password').value;
     const message = document.getElementById('message');
+    const username = normalizeUsername(usernameRaw);
 
     try {
-      const credential = await signInWithEmailAndPassword(auth, email, password);
-      await ensureUserProfile(credential.user);
+      const credential = await signInWithEmailAndPassword(auth, usernameToEmail(username), password);
+      await ensureUserProfile(credential.user, '', username);
       await safeBootstrap();
 
       message.textContent = 'Login successful.';
