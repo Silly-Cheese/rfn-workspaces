@@ -16,7 +16,7 @@ service cloud.firestore {
     }
 
     function activeUser() {
-      return hasUserDoc() && userDoc().data.status == 'active';
+      return hasUserDoc() && userDoc().data.status in ['active', 'Active'];
     }
 
     function roleIn(roles) {
