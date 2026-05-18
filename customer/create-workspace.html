@@ -1,20 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Create Workspace | RFN Workspaces</title><link rel="stylesheet" href="../css/style.css"></head>
-<body>
-<header class="topbar"><div><p class="eyebrow">Workspace Verification</p><h1>Create Workspace</h1></div><a class="btn btn-outline" href="dashboard.html">Back</a></header>
+<body class="premium-home">
+<header class="topbar"><div><p class="eyebrow">Customer Operations</p><h1>Create Workspace</h1></div><a class="btn btn-outline" href="dashboard.html">Back</a></header>
+<div class="app-shell"><aside class="sidebar"><a href="dashboard.html">Customer Dashboard</a><a class="active" href="create-workspace.html">Create Workspace</a><a href="my-workspace.html">My Workspace</a><a href="workspace-settings.html">Workspace Settings</a><a href="members.html">Members</a><a href="tickets.html">Tickets</a></aside>
 <main class="main-content">
-<section class="auth-card" style="max-width:700px;margin:auto">
-<p class="eyebrow gold-text">Approved Customers Only</p>
-<h2 style="font-size:2rem">Discord Verification</h2>
-<p class="muted">Enter your approved Discord ID to verify your workspace creation permissions and linked Roblox group.</p>
-<form class="form-stack" id="workspaceVerificationForm">
-<div class="form-field"><label>Discord ID</label><input type="text" id="discordId" placeholder="Enter your Discord ID"></div>
-<button class="btn btn-gold" type="submit">Verify Approval</button>
-</form>
-<div id="workspaceResult" class="message"></div>
-</section>
-</main>
-<script type="module" src="../js/workspaces.js"></script>
-</body>
-</html>
+<section class="hero-card"><p class="eyebrow gold-text">Workspace Request</p><h2 style="font-size:clamp(2rem,4vw,3.6rem);">Launch a customer workspace.</h2><p class="hero-copy">Submit the workspace details below. RFN management can review the request and use the record for customer oversight.</p></section>
+<section class="auth-card" style="max-width:none;margin-top:18px;"><form class="form-stack" data-collection="workspaceRequests" data-toast-title="Workspace Request Submitted"><div class="dashboard-grid"><div class="form-field"><label>Workspace Name</label><input name="workspaceName" required></div><div class="form-field"><label>Roblox Group Name</label><input name="robloxGroupName" required></div><div class="form-field"><label>Discord ID</label><input name="discordId" required></div></div><div class="form-field"><label>Workspace Purpose</label><textarea name="description" rows="5" required></textarea></div><input type="hidden" name="status" value="Submitted"><button class="btn btn-gold" type="submit">Submit Workspace Request</button></form></section>
+<section class="auth-card" style="max-width:none;margin-top:18px;overflow:auto;"><h3>Recent Workspace Requests</h3><table class="data-table"><thead><tr><th>Workspace</th><th>Owner</th><th>Status</th><th>Actions</th></tr></thead><tbody id="workspaceRequestsTable" data-list-collection="workspaceRequests"><tr><td colspan="4">Loading...</td></tr></tbody></table></section>
+</main></div><script type="module" src="../js/portal-crud.js"></script></body></html>
