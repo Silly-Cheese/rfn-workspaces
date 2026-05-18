@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Select Workspace | RFN Workspaces</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body class="premium-home">
+  <header class="public-nav glass-nav">
+    <div class="brand-block">
+      <div class="brand-mark">RFN</div>
+      <div>
+        <p class="eyebrow">Access Verified</p>
+        <h1>Choose Your Workspace</h1>
+      </div>
+    </div>
+    <nav><button class="btn btn-outline" id="logoutBtn">Logout</button></nav>
+  </header>
+
+  <main class="section-shell">
+    <section class="hero-card premium-panel" style="max-width:1100px;margin:auto;min-height:auto;">
+      <p class="eyebrow gold-text">Dual Access Account</p>
+      <h2 style="font-size:clamp(2rem,4vw,3.5rem);">You have more than one RFN access path.</h2>
+      <p class="hero-copy">Your account has both customer workspace access and RFN staff access. Select where you want to work today.</p>
+      <div class="dashboard-grid" style="margin-top:24px;">
+        <a class="dashboard-card portal-card" href="customer/dashboard.html">
+          <span class="status-pill">Customer</span>
+          <h3>Customer Workspace</h3>
+          <p class="muted">Create workspaces, manage your customer area, and submit support tickets.</p>
+        </a>
+        <a class="dashboard-card portal-card" href="rfn/employee-hub.html">
+          <span class="status-pill">RFN Staff</span>
+          <h3>Employee Operations</h3>
+          <p class="muted">Open RFN staff tools, workspace oversight, tasks, audits, reports, and internal systems.</p>
+        </a>
+        <a class="dashboard-card portal-card" href="admin/users.html">
+          <span class="status-pill">Admin</span>
+          <h3>Administrative Control</h3>
+          <p class="muted">Manage users, roles, customer approvals, system settings, and security reviews.</p>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <script type="module" src="js/auth.js"></script>
+</body>
+</html>
