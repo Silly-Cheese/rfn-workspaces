@@ -73,9 +73,11 @@ service cloud.firestore {
 
     match /users/{userId} {
       allow create: if signedIn() && request.auth.uid == userId;
-      allow read: if activeUser() && (request.auth.uid == userId || managementRole());
-      allow update: if activeUser() && (request.auth.uid == userId || adminRole());
-      allow delete: if adminRole();
+      allow read: if signedIn() && request.auth.uid == userId;
+      allow read: if activeUser() && managementRole();
+      allow update: if signedIn() && request.auth.uid == userId;
+      allow update: if activeUser() && adminRole();
+      allow delete: if activeUser() && adminRole();
     }
 
     match /usernames/{username} {
