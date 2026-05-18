@@ -6,12 +6,12 @@
   <title>User Management | RFN Workspaces</title>
   <link rel="stylesheet" href="../css/style.css">
 </head>
-<body class="premium-home">
+<body class="premium-home admin-users-page">
 <header class="topbar">
-  <div><p class="eyebrow">Administration</p><h1>User Management</h1></div>
+  <div><p class="eyebrow">Executive Administration</p><h1>User Management</h1></div>
   <a class="btn btn-outline" href="../role-select.html">Workspace Selector</a>
 </header>
-<div class="app-shell">
+<div class="app-shell admin-shell">
   <aside class="sidebar">
     <a class="active" href="users.html">Users</a>
     <a href="approvals.html">Customer Approvals</a>
@@ -19,35 +19,47 @@
     <a href="system-settings.html">System Settings</a>
     <a href="security.html">Security</a>
   </aside>
-  <main class="main-content">
-    <section class="hero-card">
-      <p class="eyebrow gold-text">RFN Executive Administration</p>
-      <h2>Real user control, not placeholders.</h2>
-      <p class="hero-copy">Add pending users, assign staff/customer access, review active profiles, suspend accounts, terminate accounts, and restore users from one administrative command center.</p>
+  <main class="main-content admin-main">
+    <section class="hero-card admin-hero compact-hero">
+      <div>
+        <p class="eyebrow gold-text">RFN Access Control</p>
+        <h2>User command center.</h2>
+        <p class="hero-copy">Prepare new accounts, assign access paths, review active profiles, and control account status from one protected administration screen.</p>
+      </div>
+      <div class="admin-mini-grid">
+        <div><strong>Active</strong><span id="activeUserCount">Profiles</span></div>
+        <div><strong>Pending</strong><span id="pendingUserCount">Invites</span></div>
+        <div><strong>Admin</strong><span>Protected</span></div>
+      </div>
     </section>
 
-    <section class="auth-card" style="max-width:none;margin-top:18px;">
-      <h3>Add / Prepare User</h3>
-      <p class="muted">This creates a pending user record. The person then signs up with the exact username you created, and the system applies the assigned role and access path.</p>
+    <section class="auth-card command-card">
+      <div class="section-heading-row">
+        <div><p class="eyebrow gold-text">Create Access</p><h3>Add Pending User</h3></div>
+        <span class="status-pill">Required Before Signup</span>
+      </div>
+      <p class="muted">Create the username first. The person signs up with that exact username, then RFN Workspaces applies the role and access path below.</p>
       <form class="form-stack" id="addUserForm">
-        <div class="dashboard-grid">
-          <div class="form-field"><label>Username</label><input name="username" type="text" placeholder="Example: executive_eagle" required></div>
-          <div class="form-field"><label>Display Name</label><input name="displayName" type="text" placeholder="Display name" required></div>
+        <div class="admin-form-grid">
+          <div class="form-field"><label>Username</label><input name="username" type="text" placeholder="executive_eagle" required></div>
+          <div class="form-field"><label>Display Name</label><input name="displayName" type="text" placeholder="Executive Eagle" required></div>
           <div class="form-field"><label>Role / Rank</label><select name="role" required><option>Customer Owner</option><option>Customer Admin</option><option>Customer Staff</option><option>Customer Viewer</option><option>Chief Executive Officer</option><option>Chief Operating Officer</option><option>Executive Director</option><option>Executive Assistant</option><option>Senior Director</option><option>Director</option><option>Associate Director</option><option>Deputy Director</option><option>Senior Operations Manager</option><option>Operations Manager</option><option>Assistant Manager</option><option>Management Trainee</option><option>Lead Associate</option><option>Senior Associate</option><option>Associate</option><option>Junior Associate</option><option>Trainee</option></select></div>
+          <div class="form-field"><label>Access Path</label><select name="accessType" required><option value="customer">Customer Only</option><option value="staff">RFN Staff Only</option><option value="both">Customer + RFN Staff</option></select></div>
         </div>
-        <div class="form-field"><label>Access Path</label><select name="accessType" required><option value="customer">Customer Only</option><option value="staff">RFN Staff Only</option><option value="both">Customer + RFN Staff</option></select></div>
         <button class="btn btn-gold" type="submit">Add Pending User</button>
       </form>
     </section>
 
-    <section class="auth-card" style="max-width:none;margin-top:18px;overflow:auto;">
-      <h3>Active User Profiles</h3>
-      <table class="data-table"><thead><tr><th>User</th><th>Role</th><th>Access</th><th>Status</th><th>Actions</th></tr></thead><tbody id="activeUsersBody"><tr><td colspan="5">Loading...</td></tr></tbody></table>
-    </section>
+    <section class="admin-table-grid">
+      <article class="auth-card table-card">
+        <div class="section-heading-row"><div><p class="eyebrow gold-text">Profiles</p><h3>Active Users</h3></div></div>
+        <div class="table-scroll"><table class="data-table"><thead><tr><th>User</th><th>Role</th><th>Access</th><th>Status</th><th>Actions</th></tr></thead><tbody id="activeUsersBody"><tr><td colspan="5">Loading...</td></tr></tbody></table></div>
+      </article>
 
-    <section class="auth-card" style="max-width:none;margin-top:18px;overflow:auto;">
-      <h3>Pending Users</h3>
-      <table class="data-table"><thead><tr><th>User</th><th>Role</th><th>Access</th><th>Status</th><th>Actions</th></tr></thead><tbody id="pendingUsersBody"><tr><td colspan="5">Loading...</td></tr></tbody></table>
+      <article class="auth-card table-card">
+        <div class="section-heading-row"><div><p class="eyebrow gold-text">Invites</p><h3>Pending Users</h3></div></div>
+        <div class="table-scroll"><table class="data-table"><thead><tr><th>User</th><th>Role</th><th>Access</th><th>Status</th><th>Actions</th></tr></thead><tbody id="pendingUsersBody"><tr><td colspan="5">Loading...</td></tr></tbody></table></div>
+      </article>
     </section>
   </main>
 </div>
