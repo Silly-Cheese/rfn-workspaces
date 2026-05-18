@@ -1,4 +1,5 @@
 rules_version = '2';
+
 service cloud.firestore {
   match /databases/{database}/documents {
 
@@ -6,12 +7,20 @@ service cloud.firestore {
       return request.auth != null;
     }
 
+    function userPath() {
+      return /databases/$(database)/documents/users/$(request.auth.uid);
+    }
+
+    function hasUserDoc() {
+      return signedIn() && exists(userPath());
+    }
+
     function userDoc() {
-      return get(/databases/$(database)/documents/users/$(request.auth.uid));
+      return get(userPath());
     }
 
     function activeUser() {
-      return signedIn() && userDoc().data.status == 'active';
+      return hasUserDoc() && userDoc().data.status == 'active';
     }
 
     function roleIn(roles) {
@@ -19,38 +28,93 @@ service cloud.firestore {
     }
 
     function adminRole() {
-      return roleIn(['Chief Executive Officer', 'Chief Operating Officer', 'Executive Director', 'Executive Assistant']);
+      return roleIn([
+        'Chief Executive Officer',
+        'Chief Operating Officer',
+        'Executive Director',
+        'Executive Assistant'
+      ]);
     }
 
     function managementRole() {
-      return roleIn(['Chief Executive Officer', 'Chief Operating Officer', 'Executive Director', 'Executive Assistant', 'Senior Director', 'Director', 'Associate Director', 'Deputy Director', 'Senior Operations Manager', 'Operations Manager', 'Assistant Manager', 'Management Trainee']);
+      return roleIn([
+        'Chief Executive Officer',
+        'Chief Operating Officer',
+        'Executive Director',
+        'Executive Assistant',
+        'Senior Director',
+        'Director',
+        'Associate Director',
+        'Deputy Director',
+        'Senior Operations Manager',
+        'Operations Manager',
+        'Assistant Manager',
+        'Management Trainee'
+      ]);
+    }
+
+    function staffRole() {
+      return roleIn([
+        'Chief Executive Officer',
+        'Chief Operating Officer',
+        'Executive Director',
+        'Executive Assistant',
+        'Senior Director',
+        'Director',
+        'Associate Director',
+        'Deputy Director',
+        'Senior Operations Manager',
+        'Operations Manager',
+        'Assistant Manager',
+        'Management Trainee',
+        'Lead Associate',
+        'Senior Associate',
+        'Associate',
+        'Junior Associate',
+        'Trainee'
+      ]);
     }
 
     match /users/{userId} {
       allow create: if signedIn() && request.auth.uid == userId;
       allow read: if activeUser() && (request.auth.uid == userId || managementRole());
       allow update: if activeUser() && (request.auth.uid == userId || adminRole());
-      allow delete: if false;
+      allow delete: if adminRole();
+    }
+
+    match /usernames/{username} {
+      allow read: if signedIn();
+      allow create: if signedIn();
+      allow update, delete: if adminRole();
+    }
+
+    match /pendingUsers/{username} {
+      allow read: if signedIn();
+      allow create, update, delete: if adminRole();
     }
 
     match /systemSettings/{document=**} {
       allow read: if activeUser();
-      allow write: if adminRole();
+      allow create: if signedIn();
+      allow update, delete: if adminRole();
     }
 
     match /roles/{document=**} {
       allow read: if activeUser();
-      allow write: if adminRole();
+      allow create: if signedIn();
+      allow update, delete: if adminRole();
     }
 
     match /permissions/{document=**} {
       allow read: if activeUser();
-      allow write: if adminRole();
+      allow create: if signedIn();
+      allow update, delete: if adminRole();
     }
 
     match /departments/{document=**} {
       allow read: if activeUser();
-      allow write: if managementRole();
+      allow create: if signedIn();
+      allow update, delete: if managementRole();
     }
 
     match /activityLogs/{document=**} {
@@ -61,7 +125,7 @@ service cloud.firestore {
 
     match /approvedCustomers/{document=**} {
       allow read: if activeUser();
-      allow write: if managementRole();
+      allow create, update, delete: if managementRole();
     }
 
     match /workspaces/{document=**} {
@@ -77,13 +141,63 @@ service cloud.firestore {
       allow delete: if adminRole();
     }
 
+    match /workspaceMembers/{document=**} {
+      allow read: if activeUser();
+      allow create, update: if managementRole();
+      allow delete: if adminRole();
+    }
+
+    match /workspaceSettings/{document=**} {
+      allow read: if activeUser();
+      allow create, update: if managementRole();
+      allow delete: if adminRole();
+    }
+
+    match /workspaceLogs/{document=**} {
+      allow create: if activeUser();
+      allow read: if managementRole();
+      allow update, delete: if false;
+    }
+
     match /tickets/{document=**} {
       allow read, create: if activeUser();
       allow update: if managementRole();
       allow delete: if adminRole();
     }
 
+    match /ticketReplies/{document=**} {
+      allow read, create: if activeUser();
+      allow update: if managementRole();
+      allow delete: if adminRole();
+    }
+
+    match /ticketAssignments/{document=**} {
+      allow read: if activeUser();
+      allow create, update, delete: if managementRole();
+    }
+
+    match /tasks/{document=**} {
+      allow read, create: if activeUser();
+      allow update: if activeUser();
+      allow delete: if managementRole();
+    }
+
+    match /taskComments/{document=**} {
+      allow read, create: if activeUser();
+      allow update, delete: if managementRole();
+    }
+
     match /internships/{document=**} {
+      allow read: if activeUser();
+      allow create, update, delete: if managementRole();
+    }
+
+    match /internshipApplications/{document=**} {
+      allow create: if signedIn();
+      allow read, update, delete: if managementRole();
+    }
+
+    match /internshipAssignments/{document=**} {
       allow read: if activeUser();
       allow create, update, delete: if managementRole();
     }
@@ -92,6 +206,47 @@ service cloud.firestore {
       allow read, create: if activeUser();
       allow update: if managementRole();
       allow delete: if adminRole();
+    }
+
+    match /audits/{document=**} {
+      allow read: if activeUser();
+      allow create, update, delete: if managementRole();
+    }
+
+    match /auditEvidence/{document=**} {
+      allow read: if managementRole();
+      allow create, update, delete: if managementRole();
+    }
+
+    match /reports/{document=**} {
+      allow read, create: if activeUser();
+      allow update, delete: if managementRole();
+    }
+
+    match /employeeEvaluations/{document=**} {
+      allow read: if managementRole();
+      allow create, update, delete: if managementRole();
+    }
+
+    match /customerEvaluations/{document=**} {
+      allow read: if managementRole();
+      allow create, update, delete: if managementRole();
+    }
+
+    match /announcements/{document=**} {
+      allow read: if activeUser();
+      allow create, update, delete: if managementRole();
+    }
+
+    match /notifications/{document=**} {
+      allow read, update: if activeUser();
+      allow create: if managementRole();
+      allow delete: if adminRole();
+    }
+
+    match /betaApplications/{document=**} {
+      allow create: if true;
+      allow read, update, delete: if managementRole();
     }
   }
 }
