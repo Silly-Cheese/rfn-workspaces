@@ -1,4 +1,56 @@
 <!DOCTYPE html>
 <html lang="en">
-<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>User Management | RFN Workspaces</title><link rel="stylesheet" href="../css/style.css"></head>
-<body><header class="topbar"><div><p class="eyebrow">Administration</p><h1>User Management</h1></div><a class="btn btn-outline" href="../dashboard.html">Main Dashboard</a></header><div class="app-shell"><aside class="sidebar"><a class="active" href="users.html">Users</a><a href="approvals.html">Customer Approvals</a><a href="roles.html">Roles</a><a href="system-settings.html">System Settings</a><a href="security.html">Security</a></aside><main class="main-content"><section class="hero-card"><p class="eyebrow gold-text">RFN Administrative Control</p><h2>Manage portal users and account states.</h2><p class="hero-copy">This page is designed for ownership and executive administration to view users, assign ranks, suspend access, restore accounts, and review user status.</p></section><section class="dashboard-grid" style="margin-top:18px"><article class="dashboard-card"><span class="status-pill">Active</span><h3>Customer Accounts</h3><p class="muted">Manage customer owners, admins, staff, and viewers.</p></article><article class="dashboard-card"><span class="status-pill">RFN</span><h3>Employee Accounts</h3><p class="muted">Manage RFN staff ranks, departments, and account status.</p></article><article class="dashboard-card"><span class="status-pill">Restricted</span><h3>Suspensions</h3><p class="muted">Review suspended, terminated, or restricted accounts.</p></article></section></main></div></body></html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Management | RFN Workspaces</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body class="premium-home">
+<header class="topbar">
+  <div><p class="eyebrow">Administration</p><h1>User Management</h1></div>
+  <a class="btn btn-outline" href="../role-select.html">Workspace Selector</a>
+</header>
+<div class="app-shell">
+  <aside class="sidebar">
+    <a class="active" href="users.html">Users</a>
+    <a href="approvals.html">Customer Approvals</a>
+    <a href="roles.html">Roles</a>
+    <a href="system-settings.html">System Settings</a>
+    <a href="security.html">Security</a>
+  </aside>
+  <main class="main-content">
+    <section class="hero-card">
+      <p class="eyebrow gold-text">RFN Executive Administration</p>
+      <h2>Real user control, not placeholders.</h2>
+      <p class="hero-copy">Add pending users, assign staff/customer access, review active profiles, suspend accounts, terminate accounts, and restore users from one administrative command center.</p>
+    </section>
+
+    <section class="auth-card" style="max-width:none;margin-top:18px;">
+      <h3>Add / Prepare User</h3>
+      <p class="muted">This creates a pending user record. The person then signs up with the exact username you created, and the system applies the assigned role and access path.</p>
+      <form class="form-stack" id="addUserForm">
+        <div class="dashboard-grid">
+          <div class="form-field"><label>Username</label><input name="username" type="text" placeholder="Example: executive_eagle" required></div>
+          <div class="form-field"><label>Display Name</label><input name="displayName" type="text" placeholder="Display name" required></div>
+          <div class="form-field"><label>Role / Rank</label><select name="role" required><option>Customer Owner</option><option>Customer Admin</option><option>Customer Staff</option><option>Customer Viewer</option><option>Chief Executive Officer</option><option>Chief Operating Officer</option><option>Executive Director</option><option>Executive Assistant</option><option>Senior Director</option><option>Director</option><option>Associate Director</option><option>Deputy Director</option><option>Senior Operations Manager</option><option>Operations Manager</option><option>Assistant Manager</option><option>Management Trainee</option><option>Lead Associate</option><option>Senior Associate</option><option>Associate</option><option>Junior Associate</option><option>Trainee</option></select></div>
+        </div>
+        <div class="form-field"><label>Access Path</label><select name="accessType" required><option value="customer">Customer Only</option><option value="staff">RFN Staff Only</option><option value="both">Customer + RFN Staff</option></select></div>
+        <button class="btn btn-gold" type="submit">Add Pending User</button>
+      </form>
+    </section>
+
+    <section class="auth-card" style="max-width:none;margin-top:18px;overflow:auto;">
+      <h3>Active User Profiles</h3>
+      <table class="data-table"><thead><tr><th>User</th><th>Role</th><th>Access</th><th>Status</th><th>Actions</th></tr></thead><tbody id="activeUsersBody"><tr><td colspan="5">Loading...</td></tr></tbody></table>
+    </section>
+
+    <section class="auth-card" style="max-width:none;margin-top:18px;overflow:auto;">
+      <h3>Pending Users</h3>
+      <table class="data-table"><thead><tr><th>User</th><th>Role</th><th>Access</th><th>Status</th><th>Actions</th></tr></thead><tbody id="pendingUsersBody"><tr><td colspan="5">Loading...</td></tr></tbody></table>
+    </section>
+  </main>
+</div>
+<script type="module" src="../js/admin-users.js"></script>
+</body>
+</html>
