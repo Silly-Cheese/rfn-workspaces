@@ -96,8 +96,6 @@ if (signupForm) {
       return;
     }
     try {
-      const pending = await getPendingProfile(username);
-      if (!pending) throw new Error('This username is not approved yet. An RFN administrator must add it before signup.');
       const credential = await createUserWithEmailAndPassword(auth, usernameToEmail(username), password);
       const profile = await finishLogin(credential, username, displayName);
       message.textContent = 'Account created successfully.';
